@@ -2,7 +2,7 @@
 
 web-router 是一个网络能力路由技能：面对联网检索类需求，先盘点你的客户端与机器上实际可用的能力，再选出一条明确可执行的路径；能力缺失时给出可核对的降级，而不是假装成功。
 
-本包只包含 Markdown 指南，不捆绑程序、账号或 API 额度。执行仍依赖宿主或你自行接入的工具；不保证所有客户端兼容、所有平台可访问。公开发布版 3.1.0，MIT 许可。
+本包只包含 Markdown 指南，不捆绑程序、账号或 API 额度。执行仍依赖宿主或你自行接入的工具；不保证所有客户端兼容、所有平台可访问。公开发布版 3.1.1，MIT 许可。
 
 ## 它替你做什么
 
@@ -21,11 +21,27 @@ web-router 是一个网络能力路由技能：面对联网检索类需求，先
 
 ## 安装（三步）
 
-1. **放目录**——把 `web-router/` 放进你的技能目录。WorkBuddy 用户级为 `~/.workbuddy/skills/web-router/`，项目级为 `.workbuddy/skills/web-router/`；**两处只装一处**，遇到同名件先备份并确认，不要直接覆盖。若从 GitHub 的 Code → Download ZIP 下载，解压目录名通常带分支名，请改名为 `web-router`。
+1. **放目录**——把 `web-router/` 放进你的客户端技能目录（**目录名必须正好是 `web-router`**）。本技能是标准 Agent Skills 格式，**适用于任何实现了该规范的客户端**，常见位置：
+
+   | 客户端 | 技能目录（把 `web-router/` 放进去） |
+   |---|---|
+   | WorkBuddy（国内版） | `~/.workbuddy/skills/web-router/` |
+   | WorkBuddy（国际版） | `~/.workbuddy-ai/skills/web-router/` |
+   | Claude / Claude Code | `~/.claude/skills/web-router/`（或项目级 `.claude/skills/web-router/`） |
+   | Cursor | 项目级 `.cursor/skills/web-router/`（或用户级 `~/.cursor/skills/web-router/`） |
+   | Codex / Cline / OpenClaw 等 | 放入其 skills 目录（如 `~/.cline/skills/web-router/`）；具体路径见各客户端文档 |
+   | Hermes / CatPaw 等 | 放入其技能目录（如 `AppData\Local\hermes\skills\web-router\`、`.catpaw/skills/web-router/`） |
+   | 任意遵循 Agent Skills 规范的客户端 | 其 skills 目录下新建 `web-router/` 即可 |
+
+   **同一客户端用户级与项目级只装一处**，遇到同名件先备份并确认，不要直接覆盖。若从 GitHub 的 Code → Download ZIP 下载，解压目录名通常带分支名，请改名为 `web-router`。
 2. **开新会话**——让客户端重新扫描技能目录。
 3. **确认被发现**——在新会话里问一个网络检索类问题，看它是否加载本技能。**普通对话里模型恰好用了搜索，不能单独证明技能被触发**；要看客户端的技能加载记录或显式加载结果。
 
-其他客户端请按其技能规范适配；本次未逐一验证。
+## 跨平台与兼容性
+
+- **格式通用**：`SKILL.md` 采用通用 Agent Skills 结构（YAML frontmatter 的 `name` + `description` 为必需字段），正文只用“宿主”等中性表述，不绑定任何单一客户端；路由方法在任何实现了该规范的客户端中都可用。
+- **WorkBuddy 扩展字段**：本包在通用字段之外，额外带了 WorkBuddy 的顶层字段（`version` / `display_name` / `display_name_en` / `description_zh` / `description_en`）。**其它客户端会忽略这些扩展字段**，不影响识别与加载；核心路由方法通用。若某客户端严格要求 frontmatter 只含 `name` + `description`，删去扩展字段即可（不影响方法正文）。
+- **未逐一实测**：各客户端的实际加载与触发我们未逐一验证；标准 Agent Skills 客户端应可直接识别。如发现未触发，请检查技能目录路径、目录名是否为 `web-router`，以及该客户端的技能扫描日志。
 
 ## 首次配置
 
@@ -71,8 +87,8 @@ web-router/
 
 | 项 | 状态 |
 |---|---|
-| 适配客户端 | 采用通用 Agent Skills 结构；WorkBuddy 的安装位置已写明。**其他客户端未逐一验证** |
-| 已测版本 | 3.0.0：独立子会话冒烟（公开网页阅读 + 官方文档搜索与提取）；3.1.0：描述层判别测试 |
+| 适配客户端 | 标准 Agent Skills 格式，跨平台通用；已列出 WorkBuddy / Claude / Cursor / Codex / Cline / Hermes / CatPaw 等安装位置（见“安装”与“跨平台与兼容性”）。**各客户端实际加载未逐一实测** |
+| 已测版本 | 3.0.0：独立子会话冒烟（公开网页阅读 + 官方文档搜索与提取）；3.1.0：描述层判别测试；3.1.1：跨平台 README 增补（安装位置表 + 兼容性小节），结构校验通过 |
 | 测试日期 | 2026-09-17 |
 | 描述层判别测试 | 独立子会话**仅依据本版 description 文本**判断 8 条查询：应触发 4 条全部命中（搜索／网页正文提取／平台采集／首次配置），near-miss 4 条全部未触发（文本润色／文本压缩／系统重装／写周报），合计 **8/8**。该测试属**描述层判别，不等于客户端真实加载** |
 | 结构校验 | 用客户端内置的技能校验脚本对**发布包解包产物**与源目录各跑一次，均**通过**（`name` 命名规范、必需字段、description 长度与字符均合规） |
